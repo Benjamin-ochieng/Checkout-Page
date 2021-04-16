@@ -2,7 +2,7 @@
   <div class="sm:flex sm:flex-row-reverse">
     <cart v-on:get-total="getTotal" />
     <div class="info py-10 sm:w-1/2 sm:px-6">
-      <form @submit.prevent="reviewOrder">
+      <ValidationForm @submit="reviewOrder" :validation-schema="schema">
         <fieldset>
           <legend class="text-gray-900 font-semibold">
             Contact information
@@ -93,17 +93,24 @@
             class="px-10 py-4 rounded-lg bg-orange-500 text-white"
           />
         </div>
-      </form>
+      </ValidationForm>
     </div>
   </div>
 </template>
 
 <script>
 import Cart from '@/components/Cart.vue';
+import { Form as ValidationForm } from 'vee-validate';
+import * as Yup from 'yup';
 
 export default {
+  setup() {
+    const schema = Yup.object().shape({ email: Yup.string().required() });
+    return { schema };
+  },
   components: {
     Cart,
+    ValidationForm,
   },
   inject: ['gStore'],
   data() {
